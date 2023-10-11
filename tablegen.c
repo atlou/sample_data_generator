@@ -6,6 +6,7 @@
 #include "generate.h"
 #include "io.h"
 #include "sort.h"
+#include "tablegen.h"
 
 int main(int argc, char **argv)
 {
@@ -17,9 +18,10 @@ int main(int argc, char **argv)
 	printf("2. Exit\n");
 	printf("\n");
 	printf("Selection: ");
-	scanf("%d", &selection); // scanf defined in stdio.h
+	scanf("%d", &selection);
 
 	system("clear");
+
 	switch (selection)
 	{
 	case 1:
@@ -35,9 +37,5 @@ int main(int argc, char **argv)
 		break;
 	}
 
-	return 0;
-
-	// use this return statement, with and without
-	// the <stdio.h> directive to see what happens
-	// return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }
