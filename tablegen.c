@@ -3,27 +3,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "generate.h"
 #include "io.h"
 #include "sort.h"
 #include "tablegen.h"
 
+// global variables
+char** firstNames;
+char** lastNames;
+char** countries;
+char** emailSuffixes;
+
 int main(int argc, char** argv) {
+	// initialize random number generator  with current time
+	time_t t;
+	srand((unsigned)time(&t));
+
+	// initialize global variables
+	firstNames = readFile(FIRST_NAMES_COUNT, FIRST_NAMES_FILE);
+	lastNames = readFile(LAST_NAMES_COUNT, LAST_NAMES_FILE);
+	countries = readFile(COUNTRIES_COUNT, COUNTRIES_FILE);
+	emailSuffixes = readFile(EMAIL_SUFFIXES_COUNT, EMAIL_SUFFIXES_FILE);
+
+
 	// TODO: add a while loop for the menu
 
 	// main menu
-	int selection;
+	system("clear");
+
 	printf("TableGen Menu\n");
 	printf("-------------\n");
 	printf("1. Generate new table\n");
 	printf("2. Exit\n");
 	printf("\n");
 	printf("Selection: ");
+
+	int selection;
 	scanf("%d", &selection);
 
 	system("clear");
-
 	switch (selection) {
 	case 1:
 		char* columnsSelection = columnsPrompt();
@@ -34,6 +54,32 @@ int main(int argc, char** argv) {
 		printf(" Columns: %s\n", columnsSelection);
 		printf(" Row count: %d\n", rowSelection);
 		printf(" File name: %s\n", fileSelection);
+
+		// TEST: generate Users
+		struct user* users = generateUsers(columnsSelection, rowSelection);
+
+		// TEST: sort users
+		sortUsers(users, rowSelection, columnsSelection[0]);
+
+		for (int i = 0; i < rowSelection; i++) {
+			printf("User %d:\n", i);
+			printf(" First name: %s\n", users[i].firstName);
+			printf(" Last name: %s\n", users[i].lastName);
+			printf(" User ID: %d\n", users[i].userID);
+		}
+
+
+		// TEST: generate users
+		// for (int i = 0; i < rowSelection; i++) {
+		// 	char* fname = generateFirstName();
+		// 	char* lname = generateLastName();
+		// 	printf("User %d:\n", i);
+		// 	printf(" Name: %s %s\n", fname, lname);
+		// 	printf(" Phone: %s\n", generatePhoneNumber());
+		// 	printf(" Email: %s\n", generateEmailAddress(fname, lname));
+		// }
+
+
 
 		// TODO: Write file.csv
 
@@ -77,15 +123,7 @@ char* columnsPrompt() {
 	scanf("%s", string);
 
 	// allocate memory
-	char* columns = (char*)malloc(strlen(string) * sizeof(char));
-	if (columns == NULL) {
-		printf("Could not allocate memory for columns input.\n");
-		printf("Program terminating.\n");
-		exit(0);
-	}
-
-	// copying string from buffer
-	columns = strdup(string);
+	char* columns = strdup(string);
 
 	return columns;
 }
@@ -108,7 +146,7 @@ char* filePrompt() {
 	scanf("%s", string);
 
 	// allocate memory
-	char* file = (char*)malloc(strlen(string) * sizeof(char));
+	char* file = (char*)malloc((strlen(string) + 1) * sizeof(char));
 	if (file == NULL) {
 		printf("Could not allocate memory for file name.\n");
 		printf("Program terminating.\n");

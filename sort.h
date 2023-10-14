@@ -1,7 +1,6 @@
 #ifndef SORT_H_
 #define SORT_H_
 
-// int get_item_count();
-// double calculate_total(int count);
+void sortUsers(struct user* users, int count, char col);
 
 #endif

@@ -26,7 +26,7 @@ char** readFile(int n, char filePath[]) {
     // temporary storage
     char buffer[64];
 
-    // allocating memory for n numbers of strings
+    // allocating memory for n number of strings
     strings = (char**)malloc(n * sizeof(char*));
     if (strings == NULL) {
         printf("Could not allocate memory for main array.\n");
@@ -54,3 +54,5 @@ char** readFile(int n, char filePath[]) {
 
     return strings;
 }
+
+void writeTable(char** rows, char filePath[]) {}
