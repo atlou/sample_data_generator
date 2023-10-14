@@ -53,42 +53,16 @@ int main(int argc, char** argv) {
 		printf("\nSummary of properties:\n");
 		printf(" Columns: %s\n", columnsSelection);
 		printf(" Row count: %d\n", rowSelection);
-		printf(" File name: %s\n", fileSelection);
+		printf(" File name: %s\n\n", fileSelection);
 
-		// TEST: generate Users
+		// generate users
 		struct user* users = generateUsers(columnsSelection, rowSelection);
-
-		// TEST: sort users
+		// sort users
 		sortUsers(users, rowSelection, columnsSelection[0]);
-
+		// TEST: print users
 		for (int i = 0; i < rowSelection; i++) {
-			printf("User %d:\n", i);
-			printf(" First name: %s\n", users[i].firstName);
-			printf(" Last name: %s\n", users[i].lastName);
-			printf(" User ID: %d\n", users[i].userID);
+			printf("%d, %s, %s\n", users[i].userID, users[i].firstName, users[i].lastName);
 		}
-
-
-		// TEST: generate users
-		// for (int i = 0; i < rowSelection; i++) {
-		// 	char* fname = generateFirstName();
-		// 	char* lname = generateLastName();
-		// 	printf("User %d:\n", i);
-		// 	printf(" Name: %s %s\n", fname, lname);
-		// 	printf(" Phone: %s\n", generatePhoneNumber());
-		// 	printf(" Email: %s\n", generateEmailAddress(fname, lname));
-		// }
-
-
-
-		// TODO: Write file.csv
-
-		// int n = 10;
-		// char** strings = readFile(n, "./first_names.txt");
-		// printf("First Names:\n");
-		// for (int i = 0; i < n; i++) {
-		// 	printf("\t%s\n", strings[i]);
-		// }
 		break;
 	case 2:
 		printf("Goodbye and thanks for using TableGen.\n");
