@@ -21,42 +21,36 @@ extern char** lastNames;
 extern char** countries;
 extern char** emailSuffixes;
 
-// generates an array of n number of users
-// only assigns variables for the right columns
-// returns a pointer of users
-struct user* generateUsers(char* columns, int n) {
+// generates a random character string
+// takes in a length, a starting character, and an ending character
+// those characters are used to establish a range in the ASCII table
+// returns a random string made from characters in that range
+char* randomASCII(int len, char start, char end) {
 
-    // allocate memory for n numbers of structs
-    struct user* users = malloc(n * sizeof(struct user));
-
-    for (int i = 0; i < n; i++) {
-        if (strchr(columns, '1') != NULL) {
-            users[i].userID = i;
-        }
-        if (strchr(columns, '2') != NULL) {
-            users[i].firstName = generateFirstName();
-        }
-        if (strchr(columns, '3') != NULL) {
-            users[i].lastName = generateLastName();
-        }
-        if (strchr(columns, '4') != NULL) {
-            users[i].country = generateCountry();
-        }
-        if (strchr(columns, '5') != NULL) {
-            users[i].phoneNumber = generatePhoneNumber();
-        }
-        if (strchr(columns, '6') != NULL) {
-            users[i].emailAddress = generateEmailAddress(users[i].firstName, users[i].lastName);
-        }
-        if (strchr(columns, '7') != NULL) {
-            users[i].sin = generateSIN();
-        }
-        if (strchr(columns, '8') != NULL) {
-            users[i].password = generatePassword();
-        }
+    char* str = (char*)malloc(sizeof(char) * (len + 1));
+    if (str == NULL) {
+        printf("Could not allocate memory for a random ASCII string.\n");
+        printf("Program terminating.\n");
+        exit(0);
     }
 
-    return users;
+    int r = end - start + 1; // range size
+    for (int i = 0; i < len; i++) {
+        char c = (rand() % r) + start;
+        // avoid commas
+        while (c == ',') {
+            c = (rand() % r) + start;
+        }
+        str[i] = c; // random ascii character from range [start to end]
+    }
+    str[len] = '\0'; // terminating char
+
+    return str;
+}
+
+char* pickRandomString(char** strings, int len) {
+    int i = rand() % len; // random number from 0 to len-1
+    return strings[i];
 }
 
 char* generateFirstName() {
@@ -130,34 +124,40 @@ char* generatePassword() {
     return randomASCII(len, '!', '~');
 }
 
-// generates a random character string
-// takes in a length, a starting character, and an ending character
-// those characters are used to establish a range in the ASCII table
-// returns a random string made from characters in that range
-char* randomASCII(int len, char start, char end) {
+// generates an array of n number of users
+// only assigns variables for the right columns
+// returns a pointer of users
+struct user* generateUsers(char* columns, int n) {
 
-    char* str = (char*)malloc(sizeof(char) * (len + 1));
-    if (str == NULL) {
-        printf("Could not allocate memory for a random ASCII string.\n");
-        printf("Program terminating.\n");
-        exit(0);
-    }
+    // allocate memory for n numbers of structs
+    struct user* users = malloc(n * sizeof(struct user));
 
-    int r = end - start + 1; // range size
-    for (int i = 0; i < len; i++) {
-        char c = (rand() % r) + start;
-        // avoid commas
-        while (c == ',') {
-            c = (rand() % r) + start;
+    for (int i = 0; i < n; i++) {
+        if (strchr(columns, '1') != NULL) {
+            users[i].userID = i + 1;
         }
-        str[i] = c; // random ascii character from range [start to end]
+        if (strchr(columns, '2') != NULL) {
+            users[i].firstName = generateFirstName();
+        }
+        if (strchr(columns, '3') != NULL) {
+            users[i].lastName = generateLastName();
+        }
+        if (strchr(columns, '4') != NULL) {
+            users[i].country = generateCountry();
+        }
+        if (strchr(columns, '5') != NULL) {
+            users[i].phoneNumber = generatePhoneNumber();
+        }
+        if (strchr(columns, '6') != NULL) {
+            users[i].emailAddress = generateEmailAddress(users[i].firstName, users[i].lastName);
+        }
+        if (strchr(columns, '7') != NULL) {
+            users[i].sin = generateSIN();
+        }
+        if (strchr(columns, '8') != NULL) {
+            users[i].password = generatePassword();
+        }
     }
-    str[len] = '\0'; // terminating char
 
-    return str;
-}
-
-char* pickRandomString(char** strings, int len) {
-    int i = rand() % len; // random number from 0 to len-1
-    return strings[i];
+    return users;
 }
