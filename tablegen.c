@@ -146,15 +146,7 @@ char* filePrompt() {
 	scanf("%s", string);
 
 	// allocate memory
-	char* file = (char*)malloc((strlen(string) + 1) * sizeof(char));
-	if (file == NULL) {
-		printf("Could not allocate memory for file name.\n");
-		printf("Program terminating.\n");
-		exit(0);
-	}
-
-	// copying string from buffer
-	file = strdup(string);
+	char* file = strdup(string);
 
 	return file;
 }
