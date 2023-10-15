@@ -27,51 +27,64 @@ int main(int argc, char** argv) {
 	countries = readFile(COUNTRIES_COUNT, COUNTRIES_FILE);
 	emailSuffixes = readFile(EMAIL_SUFFIXES_COUNT, EMAIL_SUFFIXES_FILE);
 
-
-	// TODO: add a while loop for the menu
-
-	// main menu
-	system("clear");
-
-	printf("TableGen Menu\n");
-	printf("-------------\n");
-	printf("1. Generate new table\n");
-	printf("2. Exit\n");
-	printf("\n");
-	printf("Selection: ");
-
 	int selection;
-	scanf("%d", &selection);
 
-	system("clear");
-	switch (selection) {
-	case 1:
-		char* columnsSelection = columnsPrompt();
-		int rowSelection = rowsPrompt();
-		char* fileSelection = filePrompt();
+	do {
+		// main menu
+		system("clear");
+		printf("TableGen Menu\n");
+		printf("-------------\n");
+		printf("1. Generate new table\n");
+		printf("2. Exit\n");
+		printf("\n");
+		printf("Selection: ");
+		scanf("%d", &selection);
+		system("clear");
 
-		printf("\nSummary of properties:\n");
-		printf(" Columns: %s\n", columnsSelection);
-		printf(" Row count: %d\n", rowSelection);
-		printf(" File name: %s\n\n", fileSelection);
+		if (selection == 1) {
+			char* columnsSelection = columnsPrompt();
+			int rowSelection = rowsPrompt();
+			char* fileSelection = filePrompt();
 
-		// generate users
-		struct user* users = generateUsers(columnsSelection, rowSelection);
-		// sort users
-		sortUsers(users, rowSelection, columnsSelection[0]);
-		// TEST: print users
-		for (int i = 0; i < rowSelection; i++) {
-			printf("%d, %s, %s\n", users[i].userID, users[i].firstName, users[i].lastName);
+			printf("\nSummary of properties:\n");
+			printf(" Columns: %s\n", columnsSelection);
+			printf(" Row count: %d\n", rowSelection);
+			printf(" File name: %s\n\n", fileSelection);
+
+			// generate users
+			struct user* users = generateUsers(columnsSelection, rowSelection);
+			// sort users
+			sortUsers(users, rowSelection, columnsSelection[0]);
+
+			// write file
+			writeTable(rowSelection, users, columnsSelection, fileSelection);
+			printf("Table written successfully to %s.csv\n", fileSelection);
+
+			// free users
+			for (int i = 0; i < rowSelection; i++) {
+				freeUser(&users[i]);
+			}
+			free(users);
+
+			// continue
+			char proceed;
+			printf("\nPress 'c' or 'C' to continue ");
+			do {
+				scanf("%c", &proceed);
+			} while ((proceed != 'c') && (proceed != 'C'));
+		} else {
+			printf("Invalid selection\n");
+			printf("Program terminating.\n");
+			exit(0);
 		}
-		break;
-	case 2:
-		printf("Goodbye and thanks for using TableGen.\n");
-		break;
-	default:
-		printf("Invalid selection.\n");
-		break;
-	}
+	} while (selection != 2);
 
+	freeStrings(firstNames, FIRST_NAMES_COUNT);
+	freeStrings(lastNames, LAST_NAMES_COUNT);
+	freeStrings(countries, COUNTRIES_COUNT);
+	freeStrings(emailSuffixes, EMAIL_SUFFIXES_COUNT);
+
+	printf("Goodbye and thanks for using TableGen.\n");
 	return EXIT_SUCCESS;
 }
 

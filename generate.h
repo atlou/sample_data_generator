@@ -12,6 +12,7 @@ struct user {
     char* password;
 };
 
+void freeUser(struct user* user);
 struct user* generateUsers(char* columns, int n);
 
 #endif

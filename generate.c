@@ -21,12 +21,42 @@ extern char** lastNames;
 extern char** countries;
 extern char** emailSuffixes;
 
+void freeUser(struct user* user) {
+    if (user->firstName != NULL) {
+        free(user->firstName);
+        user->firstName = NULL;
+    }
+    if (user->lastName != NULL) {
+        free(user->lastName);
+        user->lastName = NULL;
+    }
+    if (user->country != NULL) {
+        free(user->country);
+        user->country = NULL;
+    }
+    if (user->phoneNumber != NULL) {
+        free(user->phoneNumber);
+        user->phoneNumber = NULL;
+    }
+    if (user->emailAddress != NULL) {
+        free(user->emailAddress);
+        user->emailAddress = NULL;
+    }
+    if (user->sin != NULL) {
+        free(user->sin);
+        user->sin = NULL;
+    }
+    if (user->password != NULL) {
+        free(user->password);
+        user->password = NULL;
+    }
+}
+
 // generates a random character string
 // takes in a length, a starting character, and an ending character
 // those characters are used to establish a range in the ASCII table
 // returns a random string made from characters in that range
 char* randomASCII(int len, char start, char end) {
-
     char* str = (char*)malloc(sizeof(char) * (len + 1));
     if (str == NULL) {
         printf("Could not allocate memory for a random ASCII string.\n");
@@ -50,7 +80,7 @@ char* randomASCII(int len, char start, char end) {
 
 char* pickRandomString(char** strings, int len) {
     int i = rand() % len; // random number from 0 to len-1
-    return strings[i];
+    return strdup(strings[i]); // duplicating so the structs don't point to the real values
 }
 
 char* generateFirstName() {
@@ -87,6 +117,7 @@ char* generatePhoneNumber() {
     strncpy(phoneNumber + PHONE_INDEX_LENGTH + 1, phoneLine, PHONE_LINE_LENGTH); // copy phoneline into phone number
     phoneNumber[PHONE_INDEX_LENGTH + PHONE_LINE_LENGTH + 1] = '\0'; // add terminating character
 
+    free(indexCode);
     free(phoneLine);
 
     return phoneNumber;
@@ -104,12 +135,21 @@ char* generateEmailAddress(char* fname, char* lname) {
     // length = first letter + last name + @ + suffix + terminating char
     int len = 1 + strlen(lname) + 1 + strlen(suffix) + 1;
 
-    // concatenate all parts
+    // allocate memory for email address
     char* email = (char*)malloc(len * sizeof(char));
+    if (email == NULL) {
+        printf("Could not allocate memory for email address.\n");
+        printf("Program terminating.\n");
+        exit(0);
+    }
+
+    // concatenate all parts
     strcpy(email, f);
     strcat(email, lname);
     strcat(email, "@");
     strcat(email, suffix);
+
+    free(suffix);
 
     return email;
 }
@@ -130,31 +170,45 @@ char* generatePassword() {
 struct user* generateUsers(char* columns, int n) {
 
     // allocate memory for n numbers of structs
-    struct user* users = malloc(n * sizeof(struct user));
+    struct user* users = (struct user*)malloc(n * sizeof(struct user));
+    if (users == NULL) {
+        printf("Could not allocate memory for users.\n");
+        printf("Program terminating.\n");
+        exit(0);
+    }
+
+    int idBool = strchr(columns, '1') == NULL ? 0 : 1;
+    int fnameBool = strchr(columns, '2') == NULL ? 0 : 1;
+    int lnameBool = strchr(columns, '3') == NULL ? 0 : 1;
+    int countryBool = strchr(columns, '4') == NULL ? 0 : 1;
+    int phoneBool = strchr(columns, '5') == NULL ? 0 : 1;
+    int emailBool = strchr(columns, '6') == NULL ? 0 : 1;
+    int sinBool = strchr(columns, '7') == NULL ? 0 : 1;
+    int passwordBool = strchr(columns, '8') == NULL ? 0 : 1;
 
     for (int i = 0; i < n; i++) {
-        if (strchr(columns, '1') != NULL) {
+        if (idBool == 1) {
             users[i].userID = i + 1;
         }
-        if (strchr(columns, '2') != NULL) {
+        if (fnameBool == 1) {
             users[i].firstName = generateFirstName();
         }
-        if (strchr(columns, '3') != NULL) {
+        if (lnameBool == 1) {
             users[i].lastName = generateLastName();
         }
-        if (strchr(columns, '4') != NULL) {
+        if (countryBool == 1) {
             users[i].country = generateCountry();
         }
-        if (strchr(columns, '5') != NULL) {
+        if (phoneBool == 1) {
             users[i].phoneNumber = generatePhoneNumber();
         }
-        if (strchr(columns, '6') != NULL) {
+        if (emailBool == 1) {
             users[i].emailAddress = generateEmailAddress(users[i].firstName, users[i].lastName);
         }
-        if (strchr(columns, '7') != NULL) {
+        if (sinBool == 1) {
             users[i].sin = generateSIN();
         }
-        if (strchr(columns, '8') != NULL) {
+        if (passwordBool == 1) {
             users[i].password = generatePassword();
         }
     }

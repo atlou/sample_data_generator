@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "generate.h"
+#include "tablegen.h"
 
 int compareFirstNames(const void* a, const void* b) {
     const struct user* userA = (const struct user*)a;

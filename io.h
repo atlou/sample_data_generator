@@ -1,8 +1,8 @@
 #ifndef IO_H_
 #define IO_H_
 
-// int get_item_count();
-// double calculate_total(int count);
-char **readFile(int n, char filePath[]);
+void freeStrings(char** strings, int n);
+char** readFile(int n, char filePath[]);
+void writeTable(int n, struct user* users, char* columns, char* fileName);
 
 #endif
