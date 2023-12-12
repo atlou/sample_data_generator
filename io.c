@@ -54,6 +54,8 @@ char** readFile(int n, char filePath[]) {
         strings[i] = strndup(buffer, len - 1);
     }
 
+    fclose(file);
+
     return strings;
 }
 
@@ -153,7 +155,6 @@ void writeHeader(const char* columns, FILE* file) {
     fputs("\n", file); // break line
 }
 
-// TODO: implement this
 void writeTable(int n, struct user* users, char* columns, char* fileName) {
     // adding .csv to file name
     int len = strlen(fileName) + 7; // "./" + file name + ".csv" + terminating char
@@ -178,9 +179,6 @@ void writeTable(int n, struct user* users, char* columns, char* fileName) {
     for (int i = 0; i < n; i++) {
         writeRow(users[i], columns, file);
     }
-}
 
-// TODO: in whole file check for typecasting of mallocs
-// TODO: in whole file check for error checking of mallocs
-// TODO: in whole file check for strcpy VS strcat
-// TODO: in whole file free memory
+    fclose(file);
+}

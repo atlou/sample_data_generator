@@ -66,16 +66,19 @@ int main(int argc, char** argv) {
 			}
 			free(users);
 
+			// free selections
+			free(columnsSelection);
+			free(fileSelection);
+
 			// continue
 			char proceed;
 			printf("\nPress 'c' or 'C' to continue ");
 			do {
 				scanf("%c", &proceed);
 			} while ((proceed != 'c') && (proceed != 'C'));
-		} else {
+		} else if (selection != 2) {
 			printf("Invalid selection\n");
-			printf("Program terminating.\n");
-			exit(0);
+			break;
 		}
 	} while (selection != 2);
 
